@@ -8,6 +8,7 @@ _start:
       call  DecToASCII
 
       mov   eax,  0x4
+      mov   ecx,  edi
       mov   ebx,  0x1
       int   0x80
 
