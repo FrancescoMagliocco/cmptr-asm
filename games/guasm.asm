@@ -3,7 +3,7 @@
 section     .text
       global      _start
 _start:
-      mov   eax,  9573
+      rdrand      eax
       call  DecToASCII
 
       mov   eax,  0x4
@@ -25,11 +25,10 @@ _start:
 DecToASCII:
       ; prologue --------------------------------------------------------------
       push  ebp
-      mov   ebp,  esp
-      sub   esp,  0xa
-
       push  eax
       push  ebx
+      mov   ebp,  esp
+      sub   esp,  0xa
 
       ; body ------------------------------------------------------------------
       mov   ebx,  0xa
@@ -53,12 +52,12 @@ DecToASCII:
       mov   ecx,  esp
 
       ; epilogue --------------------------------------------------------------
+      mov   esp,  ebp
       pop   ebx
       pop   eax
 
-      mov   esp,  ebp
       pop   ebp
       ret
 
 section     .data
-      
+
