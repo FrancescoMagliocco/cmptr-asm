@@ -4,6 +4,10 @@ section     .text
       global      _start
 _start:
       rdrand      eax
+      mov   ecx,  100
+      div   ecx
+      xor   eax,  eax
+      mov   eax,  edx
 
       sub   esp,  10
       mov   edi,  esp
