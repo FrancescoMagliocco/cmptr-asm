@@ -9,9 +9,13 @@ _start:
       xor   eax,  eax
       mov   eax,  edx
 
-      sub   esp,  10
-      mov   edi,  esp
+      mov   ebx,  0x2         ; amount of bytes
+      sub   esp,  0x4
+      lea   edi,  [esp+0x2]   ; max length of genereated number is 2 bytes
       call  DecToASCII
+
+      mov   ecx,  eax
+      mov   edx,  ebx
 
       mov   eax,  0x4
       mov   ebx,  0x1
@@ -26,17 +30,19 @@ _start:
 ;
 ; args:
 ;     eax   = pointer to bytes to be converted
+;     ebx   = amount of bytes
 ; out:
-;     ecx   = address pointing to bytes that were converted to ascii
-;     edx   = amount of bytes ecx contains
+;     eax   = 
 DecToASCII:
       ; prologue --------------------------------------------------------------
-      push  eax
       push  ebx
+      push  ecx
+      push  edx
+      push  edi
 
       ; body ------------------------------------------------------------------
+      mov   ecx,  ebx
       mov   ebx,  0xa
-      mov   ecx,  0xa
 
       .loop: ; ----------------------------------------------------------------
             mov   edx,        0x0
@@ -50,14 +56,15 @@ DecToASCII:
             loop  .loop
 
 .endloop:
-      add   edi,  ecx
-      mov   edx,  0xb
-      sub   edx,  ecx
-      mov   ecx,  edi
-
+      lea   eax,  [edi+0x1]   ; if no + 1, oboe
+;      mov   eax,  edi
+;      inc   eax
+      
       ; epilogue --------------------------------------------------------------
+      pop   edi
+      pop   edx
+      pop   ecx
       pop   ebx
-      pop   eax
 
       ret
 
