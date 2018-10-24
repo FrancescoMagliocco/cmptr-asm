@@ -25,17 +25,14 @@ _start:
 ;     convert decimal to ascii
 ;
 ; args:
-;     eax   = address pointing to bytes to be converted to ascii
+;     eax   = pointer to bytes to be converted
 ; out:
 ;     ecx   = address pointing to bytes that were converted to ascii
 ;     edx   = amount of bytes ecx contains
 DecToASCII:
       ; prologue --------------------------------------------------------------
-;      push  ebp
       push  eax
       push  ebx
-;      mov   ebp,  esp
-;      sub   esp,  0xa
 
       ; body ------------------------------------------------------------------
       mov   ebx,  0xa
@@ -54,16 +51,15 @@ DecToASCII:
 
 .endloop:
       add   edi,  ecx
-      mov   edx,  ecx
+      mov   edx,  0xa
+      sub   edx,  ecx
       inc   edx
       mov   ecx,  edi
 
       ; epilogue --------------------------------------------------------------
-;      mov   esp,  ebp
       pop   ebx
       pop   eax
 
-;      pop   ebp
       ret
 
 section     .data
