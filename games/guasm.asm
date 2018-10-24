@@ -4,11 +4,9 @@ section     .text
       global      _start
 _start:
       rdrand      eax
-      sub   edi,  0xa
       call  DecToASCII
 
       mov   eax,  0x4
-      mov   ecx,  edi
       mov   ebx,  0x1
       int   0x80
 
@@ -22,16 +20,15 @@ _start:
 ; args:
 ;     eax   = address pointing to bytes to be converted to ascii
 ; out:
-;     edi   = address pointing to bytes that were converted to ascii
+;     ecx   = address pointing to bytes that were converted to ascii
 ;     edx   = amount of bytes ecx contains
 DecToASCII:
       ; prologue --------------------------------------------------------------
-;      push  ebp
+      push  ebp
       push  eax
       push  ebx
-      push  ecx
-;      mov   ebp,  esp
-;      sub   esp,  0xa
+      mov   ebp,  esp
+      sub   esp,  0xa
 
       ; body ------------------------------------------------------------------
       mov   ebx,  0xa
@@ -41,8 +38,7 @@ DecToASCII:
             mov   edx,        0x0
             div   ebx
             add   edx,        0x30
-;            mov   [esp+ecx],  dl
-            mov   [edi+ecx],  dl
+            mov   [esp+ecx],  dl
             
             cmp   eax,        0x0
             jz    .endloop
@@ -50,18 +46,17 @@ DecToASCII:
             loop  .loop
 
 .endloop:
-      add   edi,  ecx
+      add   esp,  ecx
       mov   edx,  ecx
       inc   edx
-;      mov   ecx,  esp
+      mov   ecx,  esp
 
       ; epilogue --------------------------------------------------------------
-;      mov   esp,  ebp
-      pop   ecx
+      mov   esp,  ebp
       pop   ebx
       pop   eax
 
-;      pop   ebp
+      pop   ebp
       ret
 
 section     .data
