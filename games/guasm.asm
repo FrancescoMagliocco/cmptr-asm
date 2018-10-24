@@ -51,9 +51,8 @@ DecToASCII:
 
 .endloop:
       add   edi,  ecx
-      mov   edx,  0xa
+      mov   edx,  0xb
       sub   edx,  ecx
-      inc   edx
       mov   ecx,  edi
 
       ; epilogue --------------------------------------------------------------
