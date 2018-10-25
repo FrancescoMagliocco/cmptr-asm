@@ -11,7 +11,7 @@ _start:
 
       mov   ebx,  0x2         ; amount of bytes
       sub   esp,  0x4
-      lea   edi,  [esp+0x2]   ; max length of genereated number is 2 bytes
+      mov   edi,  esp
       call  DecToASCII
 
       mov   ecx,  eax
