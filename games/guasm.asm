@@ -9,20 +9,20 @@ _start:
       xor   eax,  eax
       mov   eax,  edx
 
-      mov   ebx,  0x2         ; amount of bytes
-      sub   esp,  0x4
+      mov   ebx,  2     ; amount of bytes
+      sub   esp,  4 
       mov   edi,  esp
       call  DecToASCII
 
       mov   ecx,  eax
       mov   edx,  ebx
 
-      mov   eax,  0x4
-      mov   ebx,  0x1
+      mov   eax,  4
+      mov   ebx,  1
       int   0x80
 
-      mov   eax,  0x1
-      mov   ebx,  0x0
+      mov   eax,  1
+      mov   ebx,  0
       int   0x80
 
 ; DecToASCII
@@ -32,40 +32,34 @@ _start:
 ;     eax   = pointer to bytes to be converted
 ;     ebx   = amount of bytes
 ; out:
-;     eax   = 
+;     eax   = pointer to bytes converted
 DecToASCII:
-      ; prologue --------------------------------------------------------------
       push  ebx
       push  ecx
       push  edx
       push  edi
 
-      ; body ------------------------------------------------------------------
       mov   ecx,  ebx
-      mov   ebx,  0xa
+      mov   ebx,  10 
 
-      .loop: ; ----------------------------------------------------------------
-            mov   edx,        0x0
+      .loop:
+            mov   edx,              0
             div   ebx
-            add   edx,        0x30
-            mov   [edi+ecx],  dl
+            add   edx,              '0'
+            mov   [edi+ecx-1],      dl
             
-            cmp   eax,        0x0
+            cmp   eax,              0
             jz    .endloop
             
             loop  .loop
 
 .endloop:
-      lea   eax,  [edi+0x1]   ; if no + 1, oboe
-;      mov   eax,  edi
-;      inc   eax
+      mov   eax,  edi
       
-      ; epilogue --------------------------------------------------------------
       pop   edi
       pop   edx
       pop   ecx
       pop   ebx
-
       ret
 
 section     .data
