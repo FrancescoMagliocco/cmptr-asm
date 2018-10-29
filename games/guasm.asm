@@ -53,6 +53,10 @@ DecToASCII:
       mov   eax,  [ebp+12]
       sub   eax,  ecx
 
+      mov   ecx,  edi
+      mov   edi,  [ebp+16]
+      mov   ebx,  [ebp+12]
+
       pop   ebp
       ret
 
