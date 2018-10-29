@@ -28,35 +28,21 @@ _start:
       mov   ebx,  0
       int   0x80
 
-; DecToASCII
-;     convert decimal to ascii
-;
-; args:
-;     eax   = unsigned value to convert
-;     ebx   = amount of bytes
-;     edi   = pointer to destination buffer
-; out:
-;     eax   = converted
+; size_t DecToASCII(unsigned int number, size_t length, char *buf)
 DecToASCII:
       push  ebp
       mov   ebp,  esp
       
-      push  ebx
-      push  ecx
-      push  edx
-      push  edi
-
-      mov   ecx,  [ebp+8]
-;      mov   ecx,  ebx
-      mov   eax,  [ebp+12]
+      mov   ecx,  [ebp+12]
+      mov   eax,  [ebp+16]
+      mov   edi,  [ebp+8]
       mov   ebx,  10 
 
       .loop:
             mov   edx,              0
             div   ebx
             add   edx,              '0'
-            mov   [ebp+16+ecx-1],   dl
-;            mov   [edi+ecx-1],      dl
+            mov   [edi+ecx-1],      dl
             
             cmp   eax,              0
             jz    .endloop
@@ -64,13 +50,10 @@ DecToASCII:
             loop  .loop
 
 .endloop:
-;      mov   eax,  edi
-      mov   eax,  [ebp+16]
-      
-      pop   edi
-      pop   edx
-      pop   ecx
-      pop   ebx
+      mov   eax,  [ebp+8]
+      sub   eax,  ecx
+
+      pop   ebp
       ret
 
 section     .data
