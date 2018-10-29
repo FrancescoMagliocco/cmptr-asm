@@ -17,8 +17,8 @@ _start:
       push  eax
       call  DecToASCII
 
-      mov   ecx,  eax
-      mov   edx,  ebx
+      mov   edx,  eax
+;      mov   ecx,  ecx
 
       mov   eax,  4
       mov   ebx,  1
@@ -32,6 +32,9 @@ _start:
 DecToASCII:
       push  ebp
       mov   ebp,  esp
+
+      push  edi
+      push  ebx
       
       mov   ecx,  [ebp+12]
       mov   eax,  [ebp+8]
@@ -52,10 +55,12 @@ DecToASCII:
 .endloop:
       mov   eax,  [ebp+12]
       sub   eax,  ecx
+      inc   eax
 
       mov   ecx,  edi
-      mov   edi,  [ebp+16]
-      mov   ebx,  [ebp+12]
+
+      pop   ebx
+      pop   edi
 
       pop   ebp
       ret
