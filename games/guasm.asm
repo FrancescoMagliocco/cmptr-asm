@@ -6,12 +6,15 @@ _start:
       rdrand      eax
       mov   ecx,  100
       div   ecx
-      xor   eax,  eax
       mov   eax,  edx
 
       mov   ebx,  2     ; amount of bytes
       sub   esp,  4 
       mov   edi,  esp
+
+      push  eax
+      push  ebx
+      push  edi
       call  DecToASCII
 
       mov   ecx,  eax
@@ -29,24 +32,31 @@ _start:
 ;     convert decimal to ascii
 ;
 ; args:
-;     eax   = pointer to bytes to be converted
+;     eax   = unsigned value to convert
 ;     ebx   = amount of bytes
+;     edi   = pointer to destination buffer
 ; out:
-;     eax   = pointer to bytes converted
+;     eax   = converted
 DecToASCII:
+      push  ebp
+      mov   ebp,  esp
+      
       push  ebx
       push  ecx
       push  edx
       push  edi
 
-      mov   ecx,  ebx
+      mov   ecx,  [ebp+8]
+;      mov   ecx,  ebx
+      mov   eax,  [ebp+12]
       mov   ebx,  10 
 
       .loop:
             mov   edx,              0
             div   ebx
             add   edx,              '0'
-            mov   [edi+ecx-1],      dl
+            mov   [ebp+16+ecx-1],   dl
+;            mov   [edi+ecx-1],      dl
             
             cmp   eax,              0
             jz    .endloop
@@ -54,7 +64,8 @@ DecToASCII:
             loop  .loop
 
 .endloop:
-      mov   eax,  edi
+;      mov   eax,  edi
+      mov   eax,  [ebp+16]
       
       pop   edi
       pop   edx
