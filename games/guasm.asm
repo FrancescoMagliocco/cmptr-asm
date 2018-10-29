@@ -19,7 +19,7 @@ _start:
       call  DecToASCII
 
       mov   edx,  eax
-;      mov   ecx,  ecx
+      mov   ecx,  edi
 
       mov   eax,  4
       mov   ebx,  1
@@ -39,6 +39,7 @@ DecToASCII:
       mov   ebp,  esp
 
       xor   ecx,  ecx
+      xor   eax,  eax
       mov   eax,  [ebp+36]
       mov   edi,  [ebp+44]
 
@@ -46,17 +47,17 @@ DecToASCII:
             xor   edx,              edx
             div   dword             [ebp+48]
             add   edx,              '0'
-            mov   [edi+ecx-1],      dl
-            cmp   eax,              0
+            mov   [edi+ecx],        dl
             inc   ecx
+            cmp   eax,              0
             jnz   .loop
 
 .done:
-      mov   eax,  [ebp+40]
-      sub   eax,  ecx
+      mov   eax,        [ebp+40]
       inc   eax
+      mov   [ebp+28],   eax
 
-      mov   esp,  ebp
+      mov   esp,        ebp
       popa
       ret
 
