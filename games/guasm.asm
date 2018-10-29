@@ -39,12 +39,12 @@ DecToASCII:
       mov   ebp,  esp
 
       xor   ecx,  ecx
-      mov   eax,  [ebp+8]
-      mov   edi,  [ebp+16]
+      mov   eax,  [ebp+36]
+      mov   edi,  [ebp+44]
 
       .loop:
             xor   edx,              edx
-            div   dword             [ebp+20]
+            div   dword             [ebp+48]
             add   edx,              '0'
             mov   [edi+ecx-1],      dl
             cmp   eax,              0
@@ -52,7 +52,7 @@ DecToASCII:
             jnz   .loop
 
 .done:
-      mov   eax,  [ebp+12]
+      mov   eax,  [ebp+40]
       sub   eax,  ecx
       inc   eax
 
