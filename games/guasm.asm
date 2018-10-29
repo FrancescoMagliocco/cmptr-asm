@@ -6,15 +6,16 @@ _start:
       rdrand      eax
       mov   ecx,  100
       div   ecx
-      mov   eax,  edx
+;      mov   eax,  edx
 
       mov   ebx,  2     ; amount of bytes
       sub   esp,  4 
       mov   edi,  esp
 
+      push  dword 10
       push  edi
-      push  ebx
-      push  eax
+      push  dword 2
+      push  edx
       call  DecToASCII
 
       mov   edx,  eax
@@ -28,41 +29,35 @@ _start:
       mov   ebx,  0
       int   0x80
 
-; size_t DecToASCII(unsigned int number, size_t length, char *buf)
+; I WILL FIX THE NAME LATER
+; size_t DecToASCII(unsigned  int         number,
+;                             size_t      length,
+;                             char        *buf,
+;                   unsigned  int         base)
 DecToASCII:
-      push  ebp
+      pusha
       mov   ebp,  esp
 
-      push  edi
-      push  ebx
-      
-      mov   ecx,  [ebp+12]
+      xor   ecx,  ecx
       mov   eax,  [ebp+8]
       mov   edi,  [ebp+16]
-      mov   ebx,  10 
 
       .loop:
-            mov   edx,              0
-            div   ebx
+            xor   edx,              edx
+            div   dword             [ebp+20]
             add   edx,              '0'
             mov   [edi+ecx-1],      dl
-            
             cmp   eax,              0
-            jz    .endloop
-            
-            loop  .loop
+            inc   ecx
+            jnz   .loop
 
-.endloop:
+.done:
       mov   eax,  [ebp+12]
       sub   eax,  ecx
       inc   eax
 
-      mov   ecx,  edi
-
-      pop   ebx
-      pop   edi
-
-      pop   ebp
+      mov   esp,  ebp
+      popa
       ret
 
 section     .data
