@@ -19,6 +19,13 @@ _start:
       mov   edx,  eax
       mov   eax,  0
       mov   edi,  0
+      ; result = 0;
+      ; while (*char_ptr is digit)
+      ; {
+      ;     result *= 10;
+      ;     result += *char_ptr - '0';
+      ;     char_ptr++;
+      ; }
       ; I feel like I should used use eax to determine how many iteraions to use
       .loop:
             mov   esi,        max
