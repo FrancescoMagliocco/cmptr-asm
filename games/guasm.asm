@@ -15,8 +15,10 @@ _start:
       mov   edx,  4
       int   0x80
 
+      push   eax
+
       mov   ebx,  10
-      mov   edx,  0
+      mov   eax,  0
       ; result = 0;
       ; while (*char_ptr is digit)
       ; {
@@ -34,13 +36,15 @@ _start:
             mul   ebx
             mov   edi,        [esi]
             sub   edi,        '0'
-            add   edx,        edi
+            xchg  ebx,        edi
+            add   al,         bl
+            xchg  edi,        ebx
             inc   esi
             jmp   .loop
 
 .next:
       mov   ecx,  edx
-
+      pop   eax
       mov   edx,  eax
       mov   eax,  4
       mov   ebx,  1
