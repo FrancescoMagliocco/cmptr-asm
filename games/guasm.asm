@@ -16,9 +16,7 @@ _start:
       int   0x80
 
       mov   ebx,  10
-      mov   edx,  eax
-      mov   eax,  0
-      mov   edi,  0
+      mov   edx,  0
       ; result = 0;
       ; while (*char_ptr is digit)
       ; {
@@ -27,20 +25,21 @@ _start:
       ;     char_ptr++;
       ; }
       ; I feel like I should used use eax to determine how many iteraions to use
+      mov   esi,        max
       .loop:
-            mov   esi,        max
-            
+            cmp   [esi],      byte  '9'
             ja    .next
-
+            cmp   [esi],      byte  '0'
             jb    .next
             mul   ebx
-            add   eax,  [max-'0']
-            inc   edi
+            mov   edi,        [esi]
+            sub   edi,        '0'
+            add   edx,        edi
+            inc   esi
             jmp   .loop
 
 .next:
-      mov   ecx,  eax
-      pop   eax
+      mov   ecx,  edx
 
       mov   edx,  eax
       mov   eax,  4
