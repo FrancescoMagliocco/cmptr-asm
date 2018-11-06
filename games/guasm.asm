@@ -3,7 +3,6 @@
 section     .text
       global      _start
 _start:
-;------------------------------------------------------------------------------
       mov   eax,  4
       mov   ebx,  1
       mov   ecx,  maxmsg
@@ -12,34 +11,10 @@ _start:
 
       mov   eax,  3
       mov   ebx,  0
-      mov   ecx,  buf
-      mov   edx,  100
+      mov   ecx,  max
+      mov   edx,  4
       int   0x80
 
-      ; eax has the number of input bytes...?
-      mov   [e1_len],   eax
-      cmp   eax,        edx
-      jb    .2
-      mov   bl,         [ecx+eax-1]
-      cmp   bl,         10
-      je    .2
-      inc   dword       [e1_len]
-
-.1:
-      mov   eax,  3
-      mov   ebx,  0
-      mov   ecx,  dummy
-      mov   edx,  1
-      int   0x80
-
-      test  eax,  eax
-      jz    .2
-      mov   al,   [dummy]
-      cmp   al,   10
-      jne   .1
-
-.2:
-;------------------------------------------------------------------------------
       rdrand      eax
 
       mov   ecx,  max
@@ -100,10 +75,4 @@ DecToASCII:
 section     .data
       maxmsg:     db    "Enter max winning number: "
       maxmsgL:    equ   $ - maxmsg
-      max:        db    10
-      buf:        times 100   db    0
-
-; dynamic allocation?
-section     .bss
-      e1_len      resd  1
-      dummy       resd  1
+      max:        dd    0
