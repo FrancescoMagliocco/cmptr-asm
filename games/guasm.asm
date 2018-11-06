@@ -15,14 +15,47 @@ _start:
       mov   edx,  4
       int   0x80
 
+      mov   ebx,  10
+      mov   edx,  eax
+      mov   eax,  0
+      mov   edi,  0
+      ; I feel like I should used use eax to determine how many iteraions to use
+      .loop:
+            mov   esi,        max
+            
+            ja    .next
+
+            jb    .next
+            mul   ebx
+            add   eax,  [max-'0']
+            inc   edi
+            jmp   .loop
+
+.next:
+      mov   ecx,  eax
+      pop   eax
+
+      mov   edx,  eax
+      mov   eax,  4
+      mov   ebx,  1
+      cmp   ecx, 51
+      ja    .1
+      int   0x80
+.1:
+
+      mov   eax,  1
+      mov   ebx,  0
+      int   0x80
+
       rdrand      eax
 
       mov   ecx,  max
 
-
       ; I feel like ecx isn't the standard register to use for this
       div   ecx
 
+.2:
+      mov   edx,  ecx
       sub   esp,  4 
       mov   edi,  esp
 
