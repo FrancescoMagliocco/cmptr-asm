@@ -13,7 +13,7 @@ _start:
       mov   eax,  3
       mov   ebx,  0
       mov   ecx,  buf
-      mov   ecx,  100
+      mov   edx,  100
       int   0x80
 
       ; eax has the number of input bytes...?
