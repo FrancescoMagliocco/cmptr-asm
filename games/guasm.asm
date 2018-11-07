@@ -15,57 +15,36 @@ _start:
       mov   edx,  4
       int   0x80
 
-      push   eax
 
+      ; code provided by koisoke
+      ; this will terminate with esi one place ahead of the first byte rejected
+      ;     I have no idea what that means
+      ; -----------------------------------------------------------------------
+      mov   esi,  max
       mov   ebx,  10
-      mov   eax,  0
-      ; result = 0;
-      ; while (*char_ptr is digit)
-      ; {
-      ;     result *= 10;
-      ;     result += *char_ptr - '0';
-      ;     char_ptr++;
-      ; }
-      ; I feel like I should used use eax to determine how many iteraions to use
-      mov   esi,        max
+      xor   eax,  eax
+      xor   ecx,  ecx
+      
       .loop:
-            cmp   [esi],      byte  '9'
+            mov   cl,   [esi]
+            sub   cl,   '0'
+            cmp   cl,   9
             ja    .next
-            cmp   [esi],      byte  '0'
-            jb    .next
             mul   ebx
-            mov   edi,        [esi]
-            sub   edi,        '0'
-            xchg  ebx,        edi
-            add   al,         bl
-            xchg  edi,        ebx
+            add   eax,  ecx
             inc   esi
             jmp   .loop
+      ; -----------------------------------------------------------------------
 
+;      pop   eax
+     
 .next:
-      mov   ecx,  edx
-      pop   eax
-      mov   edx,  eax
-      mov   eax,  4
-      mov   ebx,  1
-      cmp   ecx, 51
-      ja    .1
-      int   0x80
-.1:
-
-      mov   eax,  1
-      mov   ebx,  0
-      int   0x80
-
+      
+      mov   ebx,  eax
       rdrand      eax
 
-      mov   ecx,  max
+      div   ebx
 
-      ; I feel like ecx isn't the standard register to use for this
-      div   ecx
-
-.2:
-      mov   edx,  ecx
       sub   esp,  4 
       mov   edi,  esp
 
@@ -108,6 +87,7 @@ DecToASCII:
             jnz   .loop
 
 .done:
+      ; is this even needed?  Or can I just mov [ebp+28], ecx?
       mov   eax,        ecx
       mov   [ebp+28],   eax
 
