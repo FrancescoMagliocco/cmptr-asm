@@ -93,7 +93,7 @@ _start:
 ;                   unsigned  int         base,
 ;                   size_t                len)
 DecToASCII:
-      pushad
+      pusha
       mov   ebp,  esp
 
       xor   ecx,  ecx
@@ -124,7 +124,7 @@ DecToASCII:
       mov   [ebp+28],   eax
 
       mov   esp,        ebp
-      popad
+      popa
       ret
 
 section     .data
