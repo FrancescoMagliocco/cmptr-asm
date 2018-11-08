@@ -119,7 +119,6 @@ DecToASCII:
             test  eax,              eax
             jnz   .loop
 
-.done:
       ; is this even needed?  Or can I just mov [ebp+28], ecx?
       mov   eax,        ecx
       mov   [ebp+28],   eax
