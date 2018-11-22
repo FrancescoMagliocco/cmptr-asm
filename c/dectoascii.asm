@@ -3,13 +3,13 @@ section     .text
       global      _start
 _start:
       sub   rsp,  32
-      mov   rsi,  rsp
+      mov   rbx,  rsp   ; using rbx as it is callee saved
 
-      mov   edi,  69
+      mov   rdi,  rbx
+      mov   rsi,  69
       mov   edx,  10
-      push  rsi
       call  dectoascii
-      pop   rsi
+      mov   rsi,  rbx
 
       mov   rdx,  rax
       mov   rax,  1
@@ -22,35 +22,24 @@ _start:
 
 dectoascii:
       xor   ecx,  ecx
-
       mov   r8d,  edx
-      mov   eax,  edi
-      .countdigits:
-            xor   edx,  edx
-            div   r8d
-
-            cmp   eax,  0
-            je    .digitscounted
-
-            inc   ecx
-            jmp   .countdigits
-.digitscounted:
-
-      mov   r9d,  ecx
-      mov   eax,  edi
-      .conversion:
+      mov   eax,  esi
+      .L1:
             xor   edx,        edx
             div   r8d
-
             add   edx,        '0'
-            mov   [rsi+rcx],  dl
+            dec   rsp
+            mov   [rsp],      dl
+            inc   rcx
+            test  eax,        eax
+            jne   .L1
+      mov   rax,  rcx
+      mov   rsi,  rsp
 
-            cmp   ecx,        0
-            je    .doneconversion
+      rep   movsb
+      ; not sure if I should leave as is, or use
+      ; lea rsp, [rsp+rax] or
+      ; add rsp, rax
+      mov   rsp,  rsi         ; return address
+      ret   
 
-            dec   ecx
-            jmp   .conversion
-.doneconversion:
-      ; add one because the amount of digits is zero-base
-      lea   rax,  [r9+1]
-      ret
