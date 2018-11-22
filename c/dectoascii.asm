@@ -33,7 +33,7 @@ dectoascii:
             inc   rcx
             test  eax,        eax
             jne   .L1
-      mov   rax,  rcx
+      mov   eax,  ecx
       mov   rsi,  rsp
 
       rep   movsb
