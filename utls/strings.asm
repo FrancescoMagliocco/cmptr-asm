@@ -17,18 +17,33 @@ _start:
 ; int
 ; isUpperAt(            char        *str,
 ;           unsigned    int         index,
-;                       size_t      size)
 isUpperAt:
+      mov   dl,   'A'
+      mov   cl,   'Z' 
+      call  isULAt
+      ret
+      
+; int
+; isLowerAt(            char        *str,
+;           unsigned    int         index,
+isLowerAt:
+      mov   dl,   'a'
+      mov   cl,   'z'
+      call  isULAt
+      ret
+
+
+; int
+; isULAt(               char        *str,
+;        unsigned       int         index,
+;        unsigned       int         low,
+;        unsigned       int         high)
+isULAt:
       xor   eax,  eax
-      
-      ; if index is greater or equal to the size, index will be out of range
-      cmp   esi,  edx
-      jae   .ret
-      
-.next:
-      cmp         byte  [edi+esi],      'A'
+
+      cmp         byte  [edi+esi],  dl
       jb          .ret
-      cmp         byte  [edi+esi],      'Z'
+      cmp         byte  [edi+esi],  cl
 
       cmovbe      eax,  [edi+esi]
 .ret:
