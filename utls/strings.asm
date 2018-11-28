@@ -7,7 +7,7 @@ section     .text
       global      _start
 _start:
       mov   rdi,  msg
-      mov   rsi,  0
+      mov   rsi,  1
       mov   rdx,  msgL
       call  isUpperAt
       mov   rax,  60
@@ -39,12 +39,15 @@ isLowerAt:
 ;        unsigned       int         low,
 ;        unsigned       int         high)
 isULAt:
-      xor   eax,  eax
+      xor   rax,  rax
+      mov   al,   [rdi+rsi]
+      sub   al,   dl
+      sub   cl,   dl
+      cmp   al,   cl
 
-      cmp         byte  [edi+esi],  dl
       jb          .ret
-      cmp         byte  [edi+esi],  cl
+      cmp         [rdi+rsi],  cl
 
-      cmovbe      eax,  [edi+esi]
+      cmovbe      eax,  [rdi+rsi]
 .ret:
       ret
