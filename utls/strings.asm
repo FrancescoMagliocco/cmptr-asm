@@ -81,7 +81,7 @@ isUpper:
             call  isLetterAt
             
             ; would it be better to just create a label and jump to it?
-            jz    .loop+6
+            jz    $+6
 
            ; call  isUpperAt
             test  al,   al
