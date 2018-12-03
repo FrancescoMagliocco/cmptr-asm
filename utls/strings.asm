@@ -25,7 +25,6 @@ isUpperAt:
 ;           unsigned    int         index,
 isLowerAt:
       mov   dl,   'a'
-      jmp   isULAt
 
 ; int
 ; isULAt(               char        *str,
@@ -46,18 +45,13 @@ isULAt:
 ; int
 ; isLetterAt(           char  *str,
 ;            unsigned   int   index)
-; NOTE: Is there a better way of doing this?
+; returned value is results of 'isLowerAt'
 isLetterAt:
+      ; should I store this on stack instead?
+      mov   dh,   [rdi+rsi]
+      or    byte  [rdi+rsi],  0x20
       call  isLowerAt
-      jz    $+5
-      mov   ah,   1
-      ret
-      call  isUpperAt
-
-      ; double check this is accurate
-      ; NOTE: read more on instruction encoding
-      jz    $+10
-      mov   al,   1
+      mov   byte  [rdi+rsi],  dh
       ret
 
 ; int
@@ -79,14 +73,10 @@ isUpper:
       .loop:
             lea   rsi,  [rcx-1]
             call  isLetterAt
-            
-            ; would it be better to just create a label and jump to it?
-            jz    $+6
-
-           ; call  isUpperAt
-            test  al,   al
-
-            jz    .ret
+            jz    .continue
+            cmp   byte [rdi+rsi],   'Z'
+            jae   .ret
+.continue:
             loop  .loop
 .ret:
       ; we return the index + 1 of which was not an uppercase, or 0 if all
