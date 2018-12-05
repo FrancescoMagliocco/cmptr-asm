@@ -114,7 +114,7 @@ isStrUL:
       jnz   .preLoop
 
       ; push fp into stack so when we ret, we call that function
-      push  rcx
+      push  rdx
       ret
 .preLoop:
       ; commented out for now.  Originally thought I would use it in the loop
