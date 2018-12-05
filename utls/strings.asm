@@ -124,8 +124,9 @@ isStrUL:
       mov   r9b,  cl
 
       mov   rcx,  rsi
+      xor   rsi,  rsi
       .loop:
-            lea   rsi,  [rcx-1]
+;            lea   rsi,  [rcx-1]
             call  isLetterAt
 
             ; condition is set prior to returning from isLetterAt
@@ -134,9 +135,17 @@ isStrUL:
             ; al is set from within the call to isLetterAt.
             sub   al,   r9b
             cmp   al,   25
-            ja    .ret
+            ja    .preRet
 .continue:
-            loop  .loop
+            inc   rsi
+            cmp   rsi,  rcx
+            jb    .loop
+.preRet:
+      cmp   rsi,  rcx
+      jne   .ret
+      xor   rax,  rax
+      ret
+
 .ret:
-      mov   rax,  rcx
+      lea   rax,  [rsi+1]
       ret
