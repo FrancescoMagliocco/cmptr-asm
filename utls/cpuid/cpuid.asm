@@ -21,9 +21,6 @@
       ; results.
 
       pop   rbx
-
-      ; This may be a bad idea if there is instructions following invocation.
-      ret
 %endmacro
 
 [BITS 64]
@@ -40,3 +37,4 @@ _start:
 
 ftMMX:
       getcpuid    1,    edx,  23
+      ret
