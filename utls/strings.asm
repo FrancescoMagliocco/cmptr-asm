@@ -6,6 +6,16 @@ section     .data
 section     .text
       global      _start
 _start:
+
+      mov   al,   'h'
+      and   al,   ~0x20
+
+      mov   al,   'Y'
+      and   al,   ~0x20
+
+      mov   al,   '7'
+      and   al,   ~0x20
+
       mov   rdi,  msg
       mov   rsi,  msgL
       mov   rdx,  isLowerAt
@@ -107,7 +117,7 @@ isLetterAt:
 ;
 ; this is intended for internal use.  Documentation is not 100% accurate for
 ; this routine.
-isStrUL:
+isStrULL:
       ; if len is 0, we will treat it as if the caller was trying to check at
       ; index 0, rather than the whole string.
       test  rsi,  rsi
@@ -148,4 +158,28 @@ isStrUL:
 
 .ret:
       lea   rax,  [rsi+1]
+      ret
+
+
+
+isStrUL:
+      xor   rcx,  rcx
+      test  rdi,  rdi
+      setz  ah
+      test  rsi,  rsi
+      setz  al
+      test  ax,   ax
+      setnz cl          ; any non zero if check is unsuccessful
+      jnz   ..@lowCs
+
+      xchg  rdi,  rsi   ; swap for rsi to be used with lodsb
+      xor   rax,  rax
+      .loop:
+            lodsb
+            btr   eax,  5     ; or eax,   0x20
+            setc  ah          ; 1 if bit 5 was set
+            sub   al,   dl
+
+..@lowCs:
+      mov   rax,  rcx
       ret
