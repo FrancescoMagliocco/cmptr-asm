@@ -7,14 +7,39 @@ section     .text
       global      _start
 _start:
 
-      mov   al,   'h'
+      ; I left this here on purpose so you guys could get a laugh.
+      mov   al,   'a'
       and   al,   ~0x20
 
-      mov   al,   'Y'
+      mov   al,   'z'
       and   al,   ~0x20
 
-      mov   al,   '7'
+      mov   al,   'A'
       and   al,   ~0x20
+
+      mov   al,   'Z'
+      and   al,   ~0x20
+
+      mov   al,   '0'
+      and   al,   ~0x20
+
+      mov   al,   '9'
+      and   al,   ~0x20
+
+      mov   al,   ':'
+      and   al,   ~0x20
+
+      mov   al,   '@'
+      and   al,   ~0x20
+
+      mov   al,   '['
+      and   al,   ~0x20
+
+      mov   al,   '`'
+      and   al,   ~0x20
+
+      mov   al,   '{'
+      mov   al,   ~0x20
 
       mov   rdi,  msg
       mov   rsi,  msgL
@@ -160,8 +185,51 @@ isStrULL:
       lea   rax,  [rsi+1]
       ret
 
+; IGNORE THE EXTRA EXCESS CODE AND OTHER SHIT - I KNOW
 
+; input:    RDI   char  c
+; output:   RAX   If `rdi` is an alpha character, contents of `rdi` will be
+;                       returned.
+;                 If `rdi` is not an alpha character, 0 will be returned.
+; If byte is in the lowercase range (0x61 - 0x7a), resetting bit 5 will convert
+;     said byte to its uppercase form.
+; If byte is already in uppercase range (0x41 - 0x5a), bit 5 is already
+;     cleared, therefore resetting bit 5 will have no affect.
+; If `dil` is anything else, when subtracting 'A' (0x41) from `dil` after
+;     resetting bit 5; comparing `dil` to 25, will depict if `dil` is an alpha
+;     character.
+; If `dil` > 25, `dil` is not an alpha character.
+; If `dil` <= 0x40, subtracting 'A' (0x41) will result in the number being
+;     normalized, therefore being > 25 and not an alpha character.
+isAlpha:
+      ; If `rax` contains data and byte is 0, the ret value wont be 0
+      ;     indicating that the byte is not alpha.
+      xor   rax,  rax
 
+      test  dil,  dil   ; Check if byte 0
+      jz    .ret        ; Byte is 0
+      
+      ; Should I clear the whole register even if only using the lower 8 bits?
+      xor   r8b,  r8b
+      mov   r8b,  dil   ; Store original byte to use as ret value if alpha
+
+      ; TODO: Read more on instruction encoding to see and understand if using
+      ;     `di` saves a byte over using `edi` and/or `rdi`.
+      ; Since we don't care about the state of bit 5 prior to clearing it,
+      ;     would `and di, ~0x20` be more ideal?
+      btr   di,  5      ; Clear bit 5
+
+      sub   dil,  'A'
+      jc    .ret        ; Not alpha
+
+      cmp         dil,  25
+      cmovbe      ax,   r8w   ; Use the original byte as ret value
+.ret:
+      ret
+      
+; IGNORE THE EXTRA EXCESS CODE AND OTHER SHIT - I KNOW
+
+; IGNORE THIS AS WELL
 isStrUL:
       xor   rcx,  rcx
       test  rdi,  rdi
